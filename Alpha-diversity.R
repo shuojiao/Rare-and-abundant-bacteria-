@@ -35,7 +35,7 @@ colnames(seme)[1]<-"Other classes"
 dat<-se
 for(i in 1:ncol(dat))
 {
-a<-wilcox.test(dat[,i]~fa,p.adj="BH",group=T)
+a<-wilcox.test(dat[,i]~fa)
 b[i]<-fdrtool(a$p.value,statistic="pvalue")
 }
 pdf("class-1.pdf",height=8,width=10)
