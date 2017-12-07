@@ -6,18 +6,6 @@ abd<-a[,colSums(a)/nrow(a)>0.0005]
 b<-a[,colSums(a)/nrow(a)>=0.00001]
 int<-b[,colSums(b)/nrow(b)<=0.0005]
 
-######generate Core matrix#####
-h<-c(1:ncol(otu));f<-0
-for (i in 1:ncol(otu))
-{b<-otu[,i];c<-sum(b)
-f[i]<-length(b[b>0])
-if (f[i]==0){h[i]=0} 
-else{h[i]=c/f[i]}}
-tt<-t(rbind(h,f))
-rownames(tt)<-colnames(otu)
-b<-rownames(subset(tt,f>nrow(otu)*0.8))
-core<-otu[,b]
-
 library(Hmisc)
 library(igraph)
 library(agricolae)
