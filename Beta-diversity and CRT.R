@@ -224,9 +224,6 @@ text(0.7,0.9,"Stress=0.143",font=2)
 dev.off()
 
 
-#############referred to  Shade et al. 2014(Conditionally rare taxa 
-disproportionately contribute to temporal changes in microbial diversity)#########
-
 b2<-rcorr(crt,env[,1:13],type="spearman")
 r<-b2$r
 p<-b2$P
@@ -248,8 +245,3 @@ corrplot(cc,"color",cl.pos="b",cl.length=5,mar=c(0,1,0,1),
 tl.col = "black",tl.srt=30,tl.cex=1)
 dev.off()
 write.table(ncc,"crt-env.xls",sep="\t")
-
-
-
-
-
