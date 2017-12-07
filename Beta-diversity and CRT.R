@@ -5,17 +5,6 @@ ra<-a[,colSums(a)/nrow(a)<0.00001]
 abd<-a[,colSums(a)/nrow(a)>0.0005]
 b<-a[,colSums(a)/nrow(a)>=0.00001]
 int<-b[,colSums(b)/nrow(b)<=0.0005]
-######generate Core matrix#####
-h<-c(1:ncol(otu));f<-0
-for (i in 1:ncol(otu))
-{b<-otu[,i];c<-sum(b)
-f[i]<-length(b[b>0])
-if (f[i]==0){h[i]=0} 
-else{h[i]=c/f[i]}}
-tt<-t(rbind(h,f))
-rownames(tt)<-colnames(otu)
-b<-rownames(subset(tt,f>nrow(otu)*0.8))
-core<-otu[,b]
 
 library(ggplot2)
 library(geosphere)
@@ -25,75 +14,6 @@ library(TSA)
 library(gplots)
 library(VennDiagram)
 
-#############contribute of sub-communities to beta-diversity################
-con<-function(core=matrix(rpois(80,1),nrow=10),
-otu=matrix(rpois(80,1),nrow=10))
-{
-dis<-matrix(NA,nrow=nrow(core),ncol=nrow(core))
-for(i in 1:nrow(core))
-{
-for(j in 1:nrow(core))
-{
-dis[i,j]<-sum(abs(core[i,]-core[j,]))/sum(abs(otu[i,]-otu[j,]))
-}
-}
-dis<-as.dist(dis)
-return(dis)
-}
-
-con_ra<-con(ra,otu)
-con_abd<-con(abd,otu)
-con_int<-con(int,otu)
-con_core<-con(core,otu)
-a<-con_core
-n<-length(as.vector(a))
-seq<-rep(1:n,2)
-value<-c(as.vector(a),as.vector(1-a))
-group<-c(rep("Core",n),rep("",n))
-d<-as.data.frame(cbind(seq,value))
-d$group<-group
-pdf("con_core.pdf",width=12,height=7)
-ggplot(d,aes(x=seq,y=value,group=group,fill=group))+
-  geom_area(position="fill")+
-  scale_fill_manual(values=c("grey92","darkorange"))+
-  labs(title="", y ="Fraction of beta diversity")+
-  theme(axis.text.x = element_blank(),
-  axis.text.y = element_text(colour="black",size=15),
-  axis.title.x = element_blank(),
-  axis.title.y = element_blank(),
-  axis.ticks.x=element_blank(),
-  title = element_text(size=20),
-  panel.grid.minor=element_blank(),
-  panel.grid.major=element_blank(),
-  legend.position='none',
-  panel.background=element_rect(linetype="dotted",fill=NA,colour="grey"))
-dev.off()
-
-n<-length(as.vector(con_ra))
-seq<-c(rep(1:n,3))
-value<-c(as.vector(con_ra),as.vector(con_int),as.vector(con_abd))
-group<-c(rep("Rara",n),
-rep("Intermediate",n),
-rep("Abundant",n))
-d<-as.data.frame(cbind(seq,value))
-d$group<-group
-pdf("con_rare.pdf",width=12,height=7)
-ggplot(d,aes(x=seq,y=value,group=group,fill=group))+
-  geom_area(position="fill")+
-  scale_fill_manual(values=c("darkorange","grey92","cornflowerblue"))+
-  labs(title="Agricultural soils", y ="Fraction of beta diversity")+
-  theme(axis.text.x = element_blank(),
-  axis.text.y = element_text(colour="black",size=15),
-  axis.title.x = element_blank(),
-  axis.title.y = element_blank(),
-  axis.ticks.x=element_blank(),
-  title = element_text(size=20),
-  panel.grid.minor=element_blank(),
-  panel.grid.major=element_blank(),
-  legend.title=element_blank(),
-  legend.text=element_text(size=15),
-  panel.background=element_rect(linetype="dotted",fill=NA,colour="grey"))
-dev.off()
 ##############Distance decay relationship###########
 col<-c("red2","darkorange","grey92","cornflowerblue")
 aa<-distm(env[,15:14])#####location####
@@ -179,7 +99,7 @@ bb<-rep(c("whole","core","ra","int","abd"),each=703)
 kruskal(b,bb,p.adj="fdr",group=T,console=T)
 
 #####################################################
-#########driving factors of ¦Â-diversity#########
+#########driving factors of Â¦Ã‚-diversity#########
 aa<-env[,15:14]
 pc<-pcnm(aa)
 pc<-pc$vectors
@@ -303,10 +223,7 @@ sub="80% confidence ellipses are shown",col=col,pch=c(15,18,20,17))
 text(0.7,0.9,"Stress=0.143",font=2)
 dev.off()
 
-###########################################
-###########CRT#####################
-crt<-SimpleRareToPrev.f(otu=t(otu),abund_thresh=0.005,
-abund_thresh_ALL=F,b_thresh=0.90, rdp_lastcol=F)
+
 #############referred to  Shade et al. 2014(Conditionally rare taxa 
 disproportionately contribute to temporal changes in microbial diversity)#########
 
